@@ -1,6 +1,5 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-import json
 
 app = FastAPI()
 
@@ -13,10 +12,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
-async def root():
-    return {"message": "Agno Playground API is running"}
-
 @app.get("/health")
 async def health():
     return {"status": "ok"}
@@ -24,30 +19,4 @@ async def health():
 @app.post("/api/chat")
 async def chat(request: Request):
     data = await request.json()
-    message = data.get('message', '')
-    return {
-        "response": f"You said: {message}",
-        "content": f"You said: {message}"
-    }
-
-@app.get("/api/agents")
-async def list_agents():
-    # Mock response for agents endpoint
-    return {
-        "agents": [
-            {
-                "id": "default-agent",
-                "name": "Default Agent",
-                "description": "A simple echo agent"
-            }
-        ]
-    }
-
-@app.post("/api/agents/{agent_id}/run")
-async def run_agent(agent_id: str, request: Request):
-    data = await request.json()
-    message = data.get('message', '')
-    return {
-        "response": f"Agent {agent_id} received: {message}",
-        "content": f"Agent {agent_id} received: {message}"
-    }
+    return {"response": f"Received: {data.get('message', '')}"}
